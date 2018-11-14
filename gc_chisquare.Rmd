@@ -13,5 +13,45 @@ Collaborated check
 
 It's Andrea again, and i'm updating some text. 
 
+
 Hi it's Angie. I'm the collaborator
 hi again
+
+
+Getting data loaded, loading tidyverse, and getting some summary coats
+```{r}
+library(tidyverse)
+gc_df <- read_csv("gc_df.csv")
+
+get_guns <- gc_df %>% 
+  filter(gender != "NA", make_get_guns !="NA") %>% 
+  count(gender, make_get_guns) %>% #makes groupings based on catagorical variables
+  spread(make_get_guns, n) %>%  # makes it look like a contingency table 
+  select(-gender)
+
+rownames(get_guns) <- c("Female", "Male") 
+View(get_guns)
+
+```
+
+I'm the collaborator and I'm going to do chi square.
+
+Is there a significant association between gender and opinion on access to guns?
+
+Chi Square
+
+```{r}
+guns_prop <-prop.table(as.matrix(get_guns), 1) #make table of proportions for each group first
+guns_prop
+
+#Perform chi-square
+
+guns_x2 <- chisq.test(get_guns) #run x2 test
+guns_x2
+
+
+```
+
+Recommended govern action on gun access differs significantly between males and females ($\chi^2$(`r guns_x2$parameter`)). Maybe include table in document, and point out biggest difference in text.
+
+Chi square doesn't have an effect size. But you cna list actual differences.
